@@ -1,37 +1,30 @@
-import { Component } from "react";
 import { HiSearch } from 'react-icons/hi';
 import { Notify } from 'notiflix';
 import css from './Searchbar.module.css';
+import { useState } from "react";
 
-export class Searchbar extends Component {
-    state = {
-        query: '',
-    }
+export function Searchbar({onSubmit}) {
+    const [query, setQuery] = useState('');
 
-    onChange = event => {
-        const { value, name } = event.currentTarget;
-        this.setState({
-            [name]: value
-        })
+    const onChange = event => {
+        const { value } = event.currentTarget;
+        setQuery(value);
     }
     
-    onSubmit = event => {
+    const handleSubmit = event => {
         event.preventDefault();
 
-        if (this.state.query.trim() === '') {
+        if (query.trim() === '') {
             Notify.failure('Enter your search request, please!');
             return;
         }
-        this.props.onSubmit(this.state.query);
-        this.setState({
-            query: ''
-        })
+        onSubmit(query);
+        setQuery('');
     }
 
-    render() {
         return (
         <header className={css.searchbar}>
-            <form className={css.form} onSubmit={this.onSubmit}>
+            <form className={css.form} onSubmit={handleSubmit}>
                 <input
                     className={css.input}
                     name="query"
@@ -39,8 +32,8 @@ export class Searchbar extends Component {
                     autoComplete="off"
                     autoFocus
                     placeholder="Search images and photos"
-                    onChange={this.onChange}
-                    value={this.state.query}
+                    onChange={onChange}
+                    value={query}
                     />
                     
                 <button type="submit" className={css.searchBtn}>
@@ -49,6 +42,5 @@ export class Searchbar extends Component {
             </form>
             </header>
         )
-    }
 }
 
